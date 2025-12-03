@@ -1,29 +1,29 @@
-const fetch = require('node-fetch');
 var express = require('express');
 var router = express.Router();
+var request = require('request');
 
 const DOG_API_URL = 'https//dog.ceo/api/breeds/image/random';
 
-router.get('/', async (req, res) => {
+router.get('/', function(req, res, next) {
+
+    request(DOG_API_URL, function (error, response, body) {
     
-    try {
-        const response = await fetch(DOG_API_URL);
-        const data = await response.json();
 
 
-            res.json({
-                message:"Dog APIのデータを取得しました。",
-                dogImageUrl: data.message,
-                status: data.status
-        });
-
-    } catch (error) {
+if (error || response.statusCode !== 200) {
         console.error("Dog API通信エラー:", error);
         res.status(500).json({
             message: "外部APIとの通信中にエラーが発生しました。",
-            error: error.message
+            error: error
         });
-    }
+        return;
+}
+
+const data = JSON.parse(body);
+
+res.json(data);
+
+    });
 });
 
 module.exports = router;
