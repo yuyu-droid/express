@@ -8,8 +8,6 @@ router.get('/', function(req, res, next) {
 
     request(DOG_API_URL, function (error, response, body) {
     
-
-
 if (error || response.statusCode !== 200) {
         console.error("Dog API通信エラー:", error);
         res.status(500).json({
